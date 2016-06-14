@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>扫雷</title>
+</head>
+<style>
+	 *{
+    	margin:0;
+    	padding:0;
+    	list-style:none;
+    }
+	#sence{
+		width:600px;
+		height:600px;
+		border:1px solid #212121;
+		border-bottom:none;
+		border-right:none;
+		position:absolute;
+		margin:auto;
+		top:0;
+		bottom:0;
+		left:0;
+		right:0;
+	    background:silver;
+	}
+	.block{
+		width:59px;
+		height:59px;
+	    float:left;
+	    margin:0 1px 1px 0;
+		background:#212121;
+		text-align:center;
+		line-height:58px;
+		color:#e7e7e7;
+	}
+	.biaoji::after{
+		content: "♛";
+		color:gold;
+	}
+	.tip{
+		background:#e5004f;
+		color:#e5e5e5;
+		font-weight:600;
+		font-size:20px;
+		transition:all 0.3s;
+	}
+	.again{
+		width:300px;
+		height:180px;
+		padding:25px 10px;
+		border:2px solid #03FDFE;
+		background:#e8e8e8;
+		display:none;
+		position:absolute;
+		margin:auto;
+		top:0;
+		left:0;
+		right:0;
+		bottom:0;
+		z-index:2;
+		color:#333;
+		font-size:22px;
+		font-family:"微软雅黑";
+		font-weight:400;
+		text-align:center;
+		line-height:100px;
+	}
+	.again .btn{
+		width:60px;
+		height:30px;
+		border:2px solid #03FDFE;
+		display:inline-block;
+		text-align:center;
+		line-height:27px;
+		position:relative;
+		cursor:pointer;
+	}
+	.again .no{
+		position:absolute;
+		left:40px;
+		bottom:40px;
+	}
+	.again .yes{
+		position:absolute;
+		right:40px;
+		bottom:40px;
+	}
+</style>
+<body>
+	<div id="sence"></div>
+	<div class="again">play again?
+		<span class="no btn">no</span>
+		<span class="yes btn">yes</span>
+	</div>
+	<script src="../jquery工程文件/jquery-1.12.0.js"></script>
+	<script>
+		$(function(){
+			$(document).on('contextmenu',false);
+			var jisuan = function(x,y){
+				var num = 0;
+				if($('#'+xy2id(x-1,y)).is('.lei')){num++};                
+				if($('#'+xy2id(x+1,y)).is('.lei')){num++};                 
+				if($('#'+xy2id(x,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x,y+1)).is('.lei')){num++};
+				if($('#'+xy2id(x-1,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x-1,y+1)).is('.lei')){num++};
+				if($('#'+xy2id(x+1,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x+1,y+1)).is('.lei')){num++};
+				return num;
+			}
+			var left = function(e){
+				if($(this).is('.biaoji')){
+					return;
+				}
+				if(e.data.lei){
+					alert('die');
+					$('.lei')
+					.css('backgroundColor','#e5004f')
+					.text('☀');
+					$('.again').show('fast',function(){
+							$(this).find('.yes').on('click',function(){
+								$('.again').hide();
+								renderSence()
+							})
+							$(this).find('.no').on('click',function(){
+								$('.again').hide();
+								return;
+							})
+						})
+				}else{
+					$(this).text(jisuan(e.data.x,e.data.y)).addClass('tip')
+				}
+			}
+
+			var right = function(e){
+				$(this).toggleClass('biaoji');
+				if($(this).is('.tip')){
+					return;
+				}
+				if($('.lei').length === $('.biaoji').length){
+					if($('.lei.biaoji').length === $('.biaoji').length){
+						alert('win');
+						$('.again').show('fast',function(){
+							$(this).find('.yes').on('click',function(){
+								$('.again').hide();
+								renderSence()
+							})
+							$(this).find('.no').on('click',function(){
+								$('.again').hide();
+								return;
+							})
+						})
+						return;
+					}
+					alert('wrong')
+				}
+			}
+
+			var clickHandle = function(e){
+				if(e.which===1){
+					$.proxy(left,this)(e)
+				}else if(e.which===3){
+					$.proxy(right,this)(e)
+				}
+			}
+			var xy2id = function(x,y){
+				return x+'-'+y;
+			}
+			var renderSence = function(){
+				var
+				i=0,
+				j=0,
+				sence = $('#sence').empty();
+				for(; i < 10; i++){
+					for(var j=0; j < 10; j++){
+						var isLei = Math.random() >0.9;
+						$('<div>')
+						.attr('id',xy2id(i,j))
+						.addClass(function(){
+							return 'block '+(isLei?'lei':'')
+						})
+						// .text(function(){
+						// 	return isLei ? '☀' : '';
+
+						// })
+						.on('mousedown',{x:i,y:j,lei:isLei},clickHandle)
+						.appendTo(sence)
+					}
+				}
+			}
+			renderSence()
+
+
+		})
+
+
+
+
+	</script>
+</body>
+</html>

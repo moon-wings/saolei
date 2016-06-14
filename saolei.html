@@ -1,0 +1,438 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>扫雷</title>
+</head>
+<style>
+	 *{
+    	margin:0;
+    	padding:0;
+    	list-style:none;
+    }
+    .mu{
+    	width: 100%;
+    	height: 100%;
+    	position: absolute;
+    	z-index: 50;
+    }
+    .t{
+    	position: absolute;
+    	font: 600 38px "Tw Cen MT Condensed Extra Bold";
+    	color: #fff;
+    	z-index: 51;
+    	bottom: 200px;
+    	left: 36%;
+    }
+	.up{
+		position: relative;
+		top: 0;
+		width: 100%;
+		height: 50%;
+		background: black;
+    	z-index: 50;
+	}
+	.down{
+		position: relative;
+		bottom: 0;
+		width: 100%;
+		height: 50%;
+		background: black;
+    	z-index: 50;
+	}
+    .mu .boom{
+		position: absolute;
+		top: 150px;
+		bottom: 0;
+		left: 35%;
+		right: 0;
+		background: url(03.png) no-repeat 0 0;
+		z-index: 51;
+    }
+    .box{
+    	width: 100%;
+    	height: 100%;
+    	position: fixed;
+    	top: 0;
+    	left: 0;
+    	background: url(03.jpg) no-repeat 0 0;
+    }
+    .box2{
+    	width: 100%;
+    	height: 100%;
+    	position: fixed;
+    	top: 0;
+    	left: 0;
+    	background: url(05.jpg) no-repeat -50px -210px;
+    	display: none;
+    }
+    .new{
+    	width: 700px;
+    	height: 150px;
+    	background: url(title.png) no-repeat 0 0;
+    	margin: 0 auto;
+    	margin-top: 100px;
+    }
+    .kuang{
+		width: 400px;
+		height: 350px;
+		background: url(bgk.png);
+		margin:0 auto;
+		margin-bottom: 150px;
+    }
+    .kuang .start{
+    	width: 163px;
+    	height: 50px;
+    	background: url(04.png) no-repeat -89px -24px;
+    	position: relative;
+    	top: 80px;
+    	left: 125px;
+    	font-size: 30px;
+    	font-family: 'times New Roman';
+    	color: #ececec;
+    	font-weight: 600;
+    	text-align: center;
+    	line-height: 50px;
+    	cursor: pointer;
+    	margin-bottom: 30px;
+    }
+    .kuang .about{
+    	width: 163px;
+    	height: 50px;
+    	background: url(04.png) no-repeat -89px -24px;
+    	position: relative;
+    	top: 80px;
+    	left: 125px;
+    	font-size: 30px;
+    	font-family: 'times New Roman';
+    	color: #ececec;
+    	font-weight: 600;
+    	text-align: center;
+    	line-height: 50px;
+    	cursor: pointer;
+    	margin-bottom: 30px;
+    }
+    .kuang .lie{
+    	width: 163px;
+    	height: 50px;
+    	background: url(lie.png) no-repeat -89px -24px;
+    	position: relative;
+    	top: 80px;
+    	left: 125px;
+    	font-size: 30px;
+    	font-family: 'times New Roman';
+    	color: #CD2626;
+    	font-weight: 600;
+    	text-align: center;
+    	line-height: 50px;
+    	cursor: pointer;
+    	margin-bottom: 30px;
+    }
+	#sence{
+		width:600px;
+		height:600px;
+		border:1px solid #212121;
+		border-bottom:none;
+		border-right:none;
+		position:absolute;
+		margin:auto;
+		top:0;
+		bottom:0;
+		left:0;
+		right:0;
+	    background:#899F4D;
+	}
+	.block{
+		width:59px;
+		height:59px;
+	    float:left;
+	    margin:0 1px 1px 0;
+		background:#1A5D0F;
+		text-align:center;
+		line-height:58px;
+		color:#e7e7e7;
+	}
+	.biaoji{
+		background: url(float.png) no-repeat 0 0;
+	}
+	.tip{
+		background:#EAC474;
+		color:#192019;
+		font-weight:600;
+		font-size:20px;
+		transition:all 0.5s;
+	}
+	.again{
+		width:300px;
+		height:180px;
+		padding:25px 10px;
+		border:1px solid #03FDFE;
+		background: url(again.jpg) no-repeat -350px -340px;
+		/*background: black;*/
+		display:none;
+		position:absolute;
+		margin:auto;
+		top:0;
+		left:0;
+		right:0;
+		bottom:0;
+		z-index:2;
+		transition:width .4s ease,height .4s ease,opacity .4s ease;
+	}
+	.again .btn{
+		width:60px;
+		height:30px;
+		border:1px solid #03FDFE;
+		display:inline-block;
+		text-align:center;
+		line-height:27px;
+		position:relative;
+		cursor:pointer;
+		font-size: 26px;
+		color: #ececec;
+		background: rgba(0,0,0,0.6);
+	}
+	.again .no{
+		position:absolute;
+		left:40px;
+		bottom:40px;
+	}
+	.again .yes{
+		position:absolute;
+		right:40px;
+		bottom:40px;
+	}
+	.active{
+		width: 700px;
+		height: 580px;
+		opacity: 0;
+	}
+</style>
+<body>
+	<div class="mu">
+		<div class="t">Tiger Minesweeper</div>
+		<div class="boom"></div>
+		<div class="up"></div>
+		<div class="down"></div>
+	</div>
+	<div class="box">
+		<div class="new"></div>
+		<div class="kuang">
+			<ul>
+				<li class="start">Start</li>
+				<li class="about">About</li>
+			</ul>
+		</div>
+	</div>
+	<div class="box2">
+		<div id="sence"></div>
+	</div>
+	<div class="again">
+		<span class="no btn">no</span>
+		<span class="yes btn">yes</span>
+	</div>
+	<script src="../jquery工程文件/jquery-1.12.0.js"></script>
+	<script>
+		$(function(){
+
+			var boom = $('.boom')
+			boom.on('click',function(){
+				$(this).next()
+				.animate({top:-750},1000)
+				$(this).next().next().animate({bottom:-750},1000)
+				$(this).fadeOut(200);
+				$(this).prev().fadeOut(200)
+				$(this).parent().fadeOut(50)
+			})
+
+			var box = $('.box')
+			
+			var lis = $('.kuang').find('li');
+			lis.each(function(i,v){
+				$(v).on('mouseenter mouseleave',function(){
+					$(this)
+					.toggleClass('lie')
+				})
+			})
+			lis.each(function(i,v){
+				$(v).on('click',function(){
+					if($(this).html()=='Start'){
+						$(this)
+						.queue(function(){
+							$(this)
+							.delay(1000)
+							.parent().parent().parent().hide()
+							.dequeue()
+						})
+						.parent().parent().parent().next().css('display','block')
+					}else if($(this).html()=='About'){
+						$(this).toggleClass('lie')
+					}
+
+				})
+			})
+
+			$(document).on('contextmenu',false);
+
+			var jisuan =function(x,y){
+				var num = 0;
+				if($('#'+xy2id(x-1,y)).is('.lei')){num++};                  //是雷就加一个数
+				if($('#'+xy2id(x+1,y)).is('.lei')){num++};                  //通过id判断位置
+				if($('#'+xy2id(x,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x,y+1)).is('.lei')){num++};
+				if($('#'+xy2id(x-1,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x-1,y+1)).is('.lei')){num++};
+				if($('#'+xy2id(x+1,y-1)).is('.lei')){num++};
+				if($('#'+xy2id(x+1,y+1)).is('.lei')){num++};
+				return num;                                                 //切记：返回这个数
+			}
+
+			
+			var left = function(e){                    
+				// console.log('left',e,this)                        
+				if($(this).is('.biaoji')){                                   //点到旗帜没反应；
+					return;
+				}
+				if(e.data.lei){                                             //点到雷；e.data绑定的数据
+					// alert('you are die')
+					$('.lei')
+					.css('background','transparent')
+					.css('backgroundImage','url(02.png)');
+					// .text('☀');
+					$('.again').fadeIn(600,function(){
+						var yes = $(this).find('.yes');
+						var no = $(this).find('.no')
+						if(yes){
+							yes.on('click',function(){
+								$('.again').addClass('active');
+								$('.again')
+								.css({
+									width:700,
+									height:580,
+									opacity:0
+								});
+								$('.again').fadeOut(600);
+								renderSence();
+							})
+							    $('.again')
+								.css({
+									width:300,
+									height:180,
+									opacity:1
+								});
+								$('.again').removeClass('active');
+						};
+						if(no){
+							no.on('click',function(){
+								$('.again')
+								.css({
+									width:700,
+									height:580,
+									opacity:0
+								})
+								return;
+							})
+						}
+					})
+				}else{
+					$(this).text(jisuan(e.data.x,e.data.y)).addClass('tip') //点到空白返回数字添加tip类
+				}
+			}
+			var right = function(e){    
+				// console.log('right',e,this)                              //右键添加biaoji类
+				$(this).toggleClass('biaoji');                              //旗帜：没有插，有拔掉；
+				if($(this).is('.tip')){                                     //点开数字没有反应；
+					return;
+				}
+				if($('.lei').length ===$('.biaoji').length){                //判断雷和旗帜的个数
+
+					if($('.lei.biaoji').length === $('.biaoji').length){ 
+						alert('win');
+						$('.again').show('fast',function(){
+							$(this).find('.yes').on('click',function(){
+								$('.again')
+								.css({
+									width:700,
+									height:580,
+									opacity:0
+								})
+								.hide();
+								renderSence();
+							})
+							$(this).find('.no').on('click',function(){
+								$('.again')
+								.css({
+									width:700,
+									height:580,
+									opacity:0
+								});
+								return;
+							})
+						})
+						return;                                        //没有这个return会直接弹出win+wrong
+					}
+					alert('wrong')
+				}
+			}
+
+			var mousedownHandel = function(e){
+				// console.log(e.data)
+				// if(e.which===1){
+				// 	zuojian.call(this,e);            //this谁的临时对象 this即这个dom对象 不兼容
+				// }else if(e.which===3){
+				// 	youjian.call(this,e);
+				// }
+			    if(e.which === 1){
+					$.proxy(left,this)(e) //第一个参数是要用的函数,整个proxy最终生成的函数就是第一个函数 但是 第一个函数的this指向的是第二个参数
+				}else if(e.which === 3){
+					$.proxy(right,this)(e)
+				}
+			}
+
+			var xy2id = function(x,y){
+				return x+'-'+y
+			}
+			var renderSence = function(){
+				var 
+				i=0,
+				j=0,
+				sence = $('#sence').empty();
+				for(; i < 10; i++){
+					for(j = 0; j < 10; j++){
+						var isLei = Math.random() >0.9;          //true(>0.9)&false(<0.9)  大小决定难易
+	 					$('<div>')
+	 					.addClass(function(){
+	 						return 'block '+ (isLei ? 'lei':''); //加类 不同情况不同类
+	 					})
+	 					.attr('id',xy2id(i,j))                   //属性
+	 					// .text(function(){                        //字
+	 					// 	return isLei ? '☀' : '';
+	 					// })
+	 					.on('mousedown',{x:i,y:j,lei:isLei},mousedownHandel)  //坐标 lei 
+	 					.appendTo(sence)
+					}
+				}
+			}
+			renderSence();
+
+		})
+		
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>
+
+<!-- 1.点到雷输了，给用户提示所有雷的位置 弹出提示窗口，可以重新开始
+2.赢了之后，弹出提示窗口，可以重新开始 -->
+<!-- $('.again')
+								.css({
+									width:700,
+									height:580,
+									opacity:0
+								}) -->
